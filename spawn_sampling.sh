@@ -9,6 +9,7 @@ for GPU in "${GPUS[@]}"; do
     CUDA_VISIBLE_DEVICES=$GPU python run_sampling.py \
         --job_dir runs/default/gsm8k.qwen-1.5b-inst \
         --sampler_config_dir distilled-100.direct/sample_1 \
+        --gpu_id ${GPUS[@]} \
         --n 2 &
 done
 

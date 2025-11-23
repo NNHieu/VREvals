@@ -15,6 +15,7 @@ parser.add_argument("--dataset_name", type=str, default="gsm8k", help="Name of t
 parser.add_argument("--split", type=str, default="test", help="Data split to use")
 parser.add_argument("--subset_num", type=int, default=None, help="Number of subset to use (optional)")
 parser.add_argument("--n", type=int, default=1, help="Number of generations per prompt")
+parser.add_argument("--gpu_id", type=int, default=0)
 
 parser.add_argument("--job_dir", type=str, required=True)
 parser.add_argument("--sampler_config_dir", type=str, required=True)
@@ -95,7 +96,7 @@ gen_df = pd.DataFrame(data=generations, columns=['question_id', 'prompt_id', 're
 gen_df
 
 t = time.localtime()
-generation_csv_name = f'generations.{t.tm_mon}.{t.tm_mday},{t.tm_hour}:{t.tm_min}.csv'
+generation_csv_name = f'generations.{t.tm_mon}.{t.tm_mday},{t.tm_hour}:{t.tm_min}_{args.gpu_id}.csv'
 gen_df.to_csv(f"{sampler_config_dir}/{generation_csv_name}", index=False)
 
 
