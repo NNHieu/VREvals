@@ -8,24 +8,30 @@ from pathlib import Path
 from sampler.chat_completion_sampler import ChatCompletionSampler, DivFirstSampler
 from sampler.vllm_sampler import VLLMSampler
 
-class Args:
-    dataset_name = "gsm8k"
-    split = "test"
-    k_list = [1,4,8,32]
-    subset_num = None
-    step_by_step_prompt = True
-    n_threads = 1
-args = Args()
+import argparse
 
-job_dir = Path(f"runs/default/{args.dataset_name}.qwen-1.5b-inst")
-try:
-    job_dir.mkdir(parents=True, exist_ok=True)
-    print(f"Directory '{job_dir}' and its parent directories created successfully.")
-except OSError as e:
-    print(f"Error creating directory: {e}")
+parser = argparse.ArgumentParser(description="Run the sampling script.")
+parser.add_argument("--dataset_name", type=str, default="gsm8k", help="Name of the dataset")
+parser.add_argument("--split", type=str, default="test", help="Data split to use")
+parser.add_argument("--subset_num", type=int, default=None, help="Number of subset to use (optional)")
+parser.add_argument("--n", type=int, default=1, help="Number of generations per prompt")
+
+parser.add_argument("--job_dir", type=str, required=True)
+parser.add_argument("--sampler_config_dir", type=str, required=True)
+
+args = parser.parse_args()
+
+# job_dir = Path(f"runs/default/{args.dataset_name}.qwen-1.5b-inst")
+job_dir = Path(args.job_dir)
+# try:
+#     job_dir.mkdir(parents=True, exist_ok=True)
+#     print(f"Directory '{job_dir}' and its parent directories created successfully.")
+# except OSError as e:
+#     print(f"Error creating directory: {e}")
     
 prompt_csv_path = f'{job_dir}/{args.split}.prompts.csv'
-sampler_config_dir = f'{job_dir}/distilled-50.direct/sample_2'
+# sampler_config_dir = f'{job_dir}/distilled-50.direct/sample_2'
+sampler_config_dir = f'{job_dir}/{args.sampler_config_dir}'
 
 with open(f"{sampler_config_dir}/sampler_config.yaml", "r") as f:
     sampler_config = yaml.safe_load(f)
@@ -77,7 +83,7 @@ prompts = prompt_df['prompt'].apply(lambda x: x + "<think>\n")
 print(prompts[0])
 
 
-response = sampler.complete(prompts, 1)
+response = sampler.complete(prompts, args.n)
 
 generations = []
 for res, (_, row) in zip(response, prompt_df.iterrows()):
