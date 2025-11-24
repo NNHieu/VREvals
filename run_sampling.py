@@ -62,6 +62,8 @@ init_args = {
     # "api_key_name": "VLLM_TOKEN",
     # "base_url": f"http://localhost:{port}/v1",
 }
+
+thinking_prefix = None
 for k, v in sampler_config_section.items():
     if k == "class":
         continue
@@ -71,6 +73,8 @@ for k, v in sampler_config_section.items():
         init_args["model_name_or_path"] = v
     # elif k == "api_key_name": 
     #     continue
+    elif k == "thinking_prefix":
+        thinking_prefix = v
     else:
         init_args[k] = v
     
@@ -79,8 +83,11 @@ print(init_args)
 # Create the sampler
 sampler = SamplerClass(**init_args)
 
+if thinking_prefix is not None:
+    prompts = prompt_df['prompt'].apply(lambda x: x + thinking_prefix)
+else:
+    prompts = prompt_df['prompt'].values
 
-prompts = prompt_df['prompt'].apply(lambda x: x + "<think>\n")
 print(prompts[0])
 
 
