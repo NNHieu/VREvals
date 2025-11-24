@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 from sampler.chat_completion_sampler import ChatCompletionSampler, DivFirstSampler
-from sampler.vllm_sampler import VLLMSampler
+from sampler.vllm_sampler import VLLMSampler, DiverPathVLLMSampler
 
 import argparse
 
@@ -54,8 +54,9 @@ sampler_classes = {
     "ChatCompletionSampler": ChatCompletionSampler,
     "DivFirstSampler": DivFirstSampler,
     "VLLMSampler": VLLMSampler,
+    "DiverPathVLLMSampler": DiverPathVLLMSampler,
 }
-SamplerClass = VLLMSampler
+SamplerClass = sampler_classes[sampler_config_section['class']]
 
 # Remove keys that are not arguments to SamplerClass.__init__
 init_args = {
