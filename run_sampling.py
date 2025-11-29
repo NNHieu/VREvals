@@ -113,7 +113,7 @@ gen_df = pd.DataFrame(data=generations, columns=['question_id', 'prompt_id', 're
 gen_df
 
 t = time.localtime()
-generation_csv_name = f'{args.split}.generations_seed{sampler_config_section['seed']}.{t.tm_mon}.{t.tm_mday},{t.tm_hour}:{t.tm_min}_{args.gpu_id}.csv'
+generation_csv_name = f"{args.split}.generations_seed{sampler_config_section['seed']}.{t.tm_mon}.{t.tm_mday},{t.tm_hour}:{t.tm_min}_{args.gpu_id}.csv"
 gen_df.to_csv(f"{sampler_config_dir}/{generation_csv_name}", index=False)
 
 
