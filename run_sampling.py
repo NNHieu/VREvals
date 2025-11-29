@@ -4,6 +4,7 @@ import pandas as pd
 import yaml
 import time
 from pathlib import Path
+import random
 
 from sampler.chat_completion_sampler import ChatCompletionSampler, DivFirstSampler
 from sampler.vllm_sampler import VLLMSampler, DiverPathVLLMSampler
@@ -48,6 +49,11 @@ sampler_config
 tokenizer_config = sampler_config.get("tokenizer", {})
 sampler_config_section = sampler_config.get("sampler", {})
 
+random.seed(int(time.time()))
+
+for i in range(os.getpid()):
+    sampler_config_section['seed'] = random.randint(1, 2**32)
+
 # Dynamically load the sampler class
 sampler_class_name = sampler_config_section.get("class", "ChatCompletionSampler")
 sampler_classes = {
@@ -78,6 +84,9 @@ for k, v in sampler_config_section.items():
         thinking_prefix = v
     else:
         init_args[k] = v
+
+
+init_args['seed'] = sampler_config_section['seed']
     
 print(init_args)
 
@@ -104,7 +113,7 @@ gen_df = pd.DataFrame(data=generations, columns=['question_id', 'prompt_id', 're
 gen_df
 
 t = time.localtime()
-generation_csv_name = f'{args.split}.generations.{t.tm_mon}.{t.tm_mday},{t.tm_hour}:{t.tm_min}_{args.gpu_id}.csv'
+generation_csv_name = f'{args.split}.generations_seed{sampler_config_section['seed']}.{t.tm_mon}.{t.tm_mday},{t.tm_hour}:{t.tm_min}_{args.gpu_id}.csv'
 gen_df.to_csv(f"{sampler_config_dir}/{generation_csv_name}", index=False)
 
 
