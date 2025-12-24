@@ -3,8 +3,8 @@ import os
 
 import anthropic
 
-from ..types import MessageList, SamplerBase, SamplerResponse
-from .. import common
+from ..eval_types import MessageList, ResponseChoice, SamplerBase, SamplerResponse
+# from .. import common
 
 CLAUDE_SYSTEM_MESSAGE_LMSYS = (
     "The assistant is Claude, created by Anthropic. The current date is "
@@ -22,6 +22,11 @@ CLAUDE_SYSTEM_MESSAGE_LMSYS = (
 ).format(currentDateTime="2024-04-01")
 # reference: https://github.com/lm-sys/FastChat/blob/7899355ebe32117fdae83985cf8ee476d2f4243f/fastchat/conversation.py#L894
 
+def has_only_user_assistant_messages(messages) -> bool:
+    """
+    Check if the messages only contain user and assistant messages.
+    """
+    return all(m["role"] in ("user", "assistant") for m in messages)
 
 class ClaudeCompletionSampler(SamplerBase):
 
@@ -63,11 +68,11 @@ class ClaudeCompletionSampler(SamplerBase):
     def _pack_message(self, role, content):
         return {"role": str(role), "content": content}
 
-    def __call__(self, message_list: MessageList) -> SamplerResponse:
+    def __call__(self, message_list: MessageList, n=1) -> SamplerResponse:
         trial = 0
         while True:
             try:
-                if not common.has_only_user_assistant_messages(message_list):
+                if not has_only_user_assistant_messages(message_list):
                     raise ValueError(f"Claude sampler only supports user and assistant messages, got {message_list}")
                 if self.system_message:
                     response_message = self.client.messages.create(
@@ -88,7 +93,8 @@ class ClaudeCompletionSampler(SamplerBase):
                     claude_input_messages = message_list
                 response_text = response_message.content[0].text
                 return SamplerResponse(
-                    response_text=response_text,
+                    status="OK",
+                    choices=[ResponseChoice(response_text=response_text)],
                     response_metadata={},
                     actual_queried_message_list=claude_input_messages,
                 )

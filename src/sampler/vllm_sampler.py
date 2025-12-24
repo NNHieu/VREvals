@@ -1,7 +1,7 @@
 import time
 from typing import Any, List, Optional
 from math import ceil
-from eval_types import MessageList, ResponseChoice, SamplerBase, SamplerResponse
+from ..eval_types import MessageList, ResponseChoice, SamplerBase, SamplerResponse
 
 try:
     from vllm import LLM, SamplingParams

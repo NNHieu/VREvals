@@ -32,7 +32,7 @@ def get_task_instruction_math(question, sampler, step_by_step=False):
     return prompt
 
 class MathEval(Eval):
-    def __init__(self, dataset_name, split, k_list, subset_num=None, step_by_step_prompt=False, n_threads=1) -> None:
+    def __init__(self, dataset_name, split, k_list, subset_num=None, step_by_step_prompt=False, n_threads=1, data_root_dir="./data") -> None:
         super().__init__()
         self.dataset_name = dataset_name
         self.split = split
@@ -42,15 +42,17 @@ class MathEval(Eval):
 
         # Paths to datasets
         dataset_paths = {
-            'math500': f'./data/MATH-500/{split}.json',
-            'gpqa': f'./data/GPQA/{split}.json',
-            'aime': f'./data/AIME/{split}.json',
-            'amc': f'./data/AMC/{split}.json',
-            'livecode': f'./data/LiveCodeBench/{split}.json',
-            'simp_math': f'./data/SIMPMATH/{split}.json',
-            'omega_func_area': './data/omega/algebra_func_area.json',
-            'omega_func_area_out': './data/omega/algebra_func_area_out.json',
-            'gsm8k': f'./data/gsm8k/{split}.json',
+            'math500': f'{data_root_dir}/MATH-500/{split}.json',
+            'gpqa': f'{data_root_dir}/GPQA/{split}.json',
+            'aime24': f'{data_root_dir}/AIME/{split}.json',
+            'aime25': f'{data_root_dir}/AIME2025/{split}.json',
+            'amc': f'{data_root_dir}/AMC/{split}.json',
+            'livecode': f'{data_root_dir}/LiveCodeBench/{split}.json',
+            'simp_math': f'{data_root_dir}/SIMPMATH/{split}.json',
+            'omega_func_area': '{data_root_dir}/omega/algebra_func_area.json',
+            'omega_func_area_out': '{data_root_dir}/omega/algebra_func_area_out.json',
+            'gsm8k': f'{data_root_dir}/gsm8k/{split}.json',
+            'imobench': f'{data_root_dir}/IMOBench/{split}.json',
         }
 
         if dataset_name in dataset_paths:

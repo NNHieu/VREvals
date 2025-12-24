@@ -6,8 +6,8 @@ import time
 from pathlib import Path
 import random
 
-from sampler.chat_completion_sampler import ChatCompletionSampler, DivFirstSampler
-from sampler.vllm_sampler import VLLMSampler, DiverPathVLLMSampler
+from src.sampler.chat_completion_sampler import ChatCompletionSampler, DivFirstSampler
+from src.sampler.vllm_sampler import VLLMSampler, DiverPathVLLMSampler
 
 import argparse
 
@@ -89,6 +89,7 @@ for k, v in sampler_config_section.items():
 init_args['seed'] = sampler_config_section['seed']
     
 print(init_args)
+print(thinking_prefix)
 
 # Create the sampler
 sampler = SamplerClass(**init_args)

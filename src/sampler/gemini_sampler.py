@@ -5,15 +5,7 @@ from typing import Any
 from google import genai
 from google.genai import types
 
-from ..types import MessageList, SamplerBase, SamplerResponse
-
-# GEMINI_SYSTEM_PROMPT = """You are a professional veterinarian assisting farmers in **Vietnam**. Provide a direct answer when appropriate.
-
-# Your responsibilities:
-# 	1.	Ask for relevant follow-up information when necessary to provide accurate advice.
-# 	2.	If the user is seeking a diagnosis and multiple diseases are possible, request additional details to narrow it down and offer a differential diagnosis when needed.
-#     3.  Your answer have to be tailored for farmers in Vietnam (e.g. consider location, resource, ...)
-# """
+from ..eval_types import MessageList, ResponseChoice, SamplerBase, SamplerResponse
 
 GEMINI_SYSTEM_PROMPT = (
     "You are a helpful assistant."
@@ -97,7 +89,7 @@ class GeminiSampler(SamplerBase):
             gemini_messages.append({"role": role, "parts": parts})
         return gemini_messages
 
-    def __call__(self, message_list: MessageList) -> SamplerResponse:
+    def __call__(self, message_list: MessageList, n=1) -> SamplerResponse:
         # Gemini expects a list of messages, each with "role" and "parts"
         # if self.system_message:
         #     system_msg = self._pack_message("system", self.system_message)
@@ -124,7 +116,8 @@ class GeminiSampler(SamplerBase):
                 # print(response.candidates[0])
                 response_text = response.candidates[0].content.parts[0].text
                 return SamplerResponse(
-                    response_text=response_text,
+                    status="OK",
+                    choices=[ResponseChoice(response_text=response_text)],
                     response_metadata={},
                     actual_queried_message_list=message_list,
                 )
