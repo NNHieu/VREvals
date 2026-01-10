@@ -1,10 +1,10 @@
 import os, time
 
 from collections import defaultdict
-from eval_types import Eval, PerGenerationEvalResult, SamplerBase, SingleEvalResult
+from src.eval_types import Eval, PerGenerationEvalResult, SamplerBase, SingleEvalResult
 from evaluate import evaluate_predictions
 import numpy as np
-import common
+import src.common
 # from lcb_runner.evaluation.pass_k_utils import estimate_pass_at_k
 import json
 from pydantic.json import pydantic_encoder

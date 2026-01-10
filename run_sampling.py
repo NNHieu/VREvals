@@ -46,7 +46,7 @@ with open(f"{sampler_config_dir}/sampler_config.yaml", "r") as f:
 sampler_config
 
 # Extract tokenizer config and sampler config
-tokenizer_config = sampler_config.get("tokenizer", {})
+tokenizer_config = sampler_config.get("tokenizer", {"path": None})
 sampler_config_section = sampler_config.get("sampler", {})
 
 random.seed(int(time.time()))
@@ -87,6 +87,7 @@ for k, v in sampler_config_section.items():
 
 
 init_args['seed'] = sampler_config_section['seed']
+init_args['tokenizer'] = tokenizer_config['path']
     
 print(init_args)
 print(thinking_prefix)

@@ -7,8 +7,8 @@ import os, time
 from collections import defaultdict
 # from lcb_runner.evaluation import codegen_metrics
 # from lcb_runner.evaluation.pass_k_utils import estimate_pass_at_k
-from utils.math_equivalence import is_equiv
-from eval_types import PerGenerationEvalResult, SamplerResponse
+from src.utils.math_equivalence import is_math_equiv as is_equiv
+from src.eval_types import PerGenerationEvalResult, SamplerResponse
 from pydantic.json import pydantic_encoder
 
 

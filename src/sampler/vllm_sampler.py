@@ -40,6 +40,7 @@ class VLLMSampler(SamplerBase):
                 "vllm is not installed. Please install vllm to use VLLMSampler."
             )
         # vllm.LLM can be heavy to initialize, so allow multiple kwargs
+        print("Tokenizer:", tokenizer)
         self.llm = LLM(
             model=model_name_or_path,
             tokenizer=tokenizer,
