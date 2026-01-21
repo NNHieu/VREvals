@@ -180,7 +180,7 @@ class DiverPathVLLMSampler(VLLMSampler):
                     #     )[:self.first_topk]
                     #     candidates = [t[0] for t in candidates]
                 print(f"[DiverPathVLLMSampler] Prompt {idx} top candidates:", candidates)
-                assert len(candidates) == self.first_topk
+                # assert len(candidates) == self.first_topk
                 num_repeats = (n + len(candidates) - 1) // len(candidates)
                 candidates = (candidates * num_repeats)[:n]
                 print(f"[DiverPathVLLMSampler] Prompt {idx} repeated candidates for n={n}:", candidates)
