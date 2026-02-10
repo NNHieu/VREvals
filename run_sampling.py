@@ -72,7 +72,7 @@ init_args = {
 
 thinking_prefix = None
 for k, v in sampler_config_section.items():
-    if k == "class":
+    if k == "class" or k == "stop":
         continue
     # Renaming config keys to match the argument names where needed
     if k == "model_name":
@@ -103,7 +103,7 @@ else:
 print(prompts[0])
 
 
-response = sampler.complete(prompts, args.n)
+response = sampler.complete(prompts, args.n, stop=sampler_config_section.get("stop"))
 
 generations = []
 for res, (_, row) in zip(response, prompt_df.iterrows()):

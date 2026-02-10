@@ -68,13 +68,15 @@ class VLLMSampler(SamplerBase):
             # Fallback: naive concatenation
             return "\n".join([f"{msg['role']}: {msg['content']}" for msg in message_list])
 
-    def complete(self, prompts: str, n: int = 1) -> SamplerResponse:
+    def complete(self, prompts: str, n: int = 1, stop=None) -> SamplerResponse:
         sampling_params = SamplingParams(
             temperature=self.temperature,
             max_tokens=self.max_tokens,
             top_k=self.top_k,
             top_p=self.top_p,
             n=n,
+            include_stop_str_in_output=True,
+            stop=stop,
         )
         resonpses = []
         try:
